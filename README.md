@@ -12,7 +12,7 @@ End-to-end UI tests and REST API tests for **[Toolshop](https://practicesoftware
 |---|---|---|
 | **UI** (`tests/ui`) | 11 | Search (matching, case-insensitive, no-results message, clearing the search), sorting by name and price in both directions, product page data, quantity controls, add-to-cart confirmation, cart line and total prices |
 | **API** (`tests/api`) | 6 | `GET /products` pagination and data validity, `GET /products/{id}`, `GET /products/search`, 404 for unknown ids, `GET /categories`, 401 for invalid login |
-| **Known bugs** (`tests/known-bugs`) | 4 | Reproduces four defects in the shop's deliberately buggy build — see below |
+| **Known bugs** (`tests/known-bugs`) | 4 | Checks for four defects in the shop's deliberately buggy build — see below |
 
 ## Known-bug regression tests
 
@@ -20,12 +20,14 @@ The shop has a second build seeded with defects. I tested it manually first and 
 
 | ID | Defect |
 |---|---|
-| BUG-01 | Clearing the search with "X" leaves the product grid empty |
+| BUG-01 | Clearing the search with "X" leaves the product grid empty *(intermittent — parked as `test.fixme`)* |
 | BUG-02 | Quantity + / − buttons don't change the quantity |
 | BUG-03 | Cart line total shows `$00.00` |
 | BUG-04 | An error message appears even though the item was added |
 
 Each test asserts the **correct** behaviour and is marked `test.fail()`. While the bug exists, the test is reported as *expected to fail*; if a bug is ever fixed, the test turns red so the marker can be removed. This is how I'd keep known defects visible in a real regression suite without blocking the pipeline.
+
+BUG-01 turned out to be intermittent: it reproduced every time during manual testing but not on later runs, so it is marked `test.fixme` (skipped, with the reason recorded) rather than asserted as a failure. An unreliable bug check would make the pipeline flaky.
 
 ## Project structure
 
