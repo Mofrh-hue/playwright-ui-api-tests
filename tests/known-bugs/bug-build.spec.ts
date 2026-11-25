@@ -18,11 +18,13 @@ test.describe('Known defects in the bug build', () => {
     test.fail(true, 'BUG-01: clicking X after a search leaves the product grid empty');
     const home = new HomePage(page);
     await home.open();
+    const before = await home.productNames.count();
     await home.search('pliers');
+    await expect.poll(() => home.productNames.count()).toBeLessThan(before);
 
     await home.searchReset.click();
 
-    await expect(home.productNames.first()).toBeVisible({ timeout: 8_000 });
+    await expect(home.productNames).toHaveCount(before, { timeout: 8_000 });
   });
 
   test('BUG-02: the + button increases the quantity', async ({ page }) => {
