@@ -35,7 +35,7 @@ export class HomePage {
     // Wait for the search API response, not just the caption, so the grid
     // is never read while it still shows the previous results.
     const response = this.page.waitForResponse(
-      (r) => r.url().includes('/products/search') && r.request().method() === 'GET',
+      (r) => r.url().includes('/products/search') && r.request().method() !== 'OPTIONS',
     );
     await this.searchButton.click();
     await response;
