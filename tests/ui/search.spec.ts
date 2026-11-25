@@ -12,11 +12,13 @@ test.describe('Product search', () => {
   test('returns only matching products', async () => {
     await home.search('pliers');
 
-    const names = await home.names();
-    expect(names.length).toBeGreaterThan(0);
-    for (const name of names) {
-      expect(name.toLowerCase()).toContain('pliers');
-    }
+    // Poll until the grid has re-rendered with the search results.
+    await expect
+      .poll(async () => {
+        const names = await home.names();
+        return names.length > 0 && names.every((n) => n.toLowerCase().includes('pliers'));
+      })
+      .toBe(true);
   });
 
   test('is case-insensitive', async () => {
