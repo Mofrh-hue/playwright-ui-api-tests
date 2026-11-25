@@ -32,7 +32,13 @@ export class HomePage {
 
   async search(term: string) {
     await this.searchInput.fill(term);
+    // Wait for the search API response, not just the caption, so the grid
+    // is never read while it still shows the previous results.
+    const response = this.page.waitForResponse(
+      (r) => r.url().includes('/products/search') && r.request().method() === 'GET',
+    );
     await this.searchButton.click();
+    await response;
     await expect(this.searchCaption).toContainText(term);
   }
 
